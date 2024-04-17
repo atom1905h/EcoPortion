@@ -1,23 +1,7 @@
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-import re
-
-
-def remove_quantity_and_unit(recipe_ingredients):
-    recipe_ingredients = recipe_ingredients.replace("[재료]", "")
-    recipe_ingredients = recipe_ingredients.replace("[양념]", "|")
-    ingredients_list = recipe_ingredients.split("|")
-
-    cleaned_ingredients = []
-    for ingredient in ingredients_list:
-        parts = ingredient.strip().split(" ")
-        ingredient_name = " ".join(parts[:-1])
-        cleaned_ingredient = re.sub(r"\[.*?\]", "", ingredient_name).strip()
-        if cleaned_ingredient:
-            cleaned_ingredients.append(cleaned_ingredient)
-
-    return cleaned_ingredients
+from data_preprocessing import remove_quantity_and_unit
 
 
 def remove_empty_lists(df):

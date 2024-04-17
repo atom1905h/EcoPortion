@@ -8,18 +8,25 @@ from sklearn.decomposition import TruncatedSVD
 import re
 
 
+def ingredient_text_preprocessing(text):
+    text = re.sub(r"\d+(\.\d+)?\w*", "", text).strip()
+    text = re.sub(r"약간", "", text)
+    text = re.sub(r"/", "", text)
+    text = re.sub(r"\*", "", text)
+    text = re.sub(r"\([^)]*\)", "", text).strip()
+    return text
+
+
 def remove_quantity_and_unit(recipe_ingredients):
-    recipe_ingredients = recipe_ingredients.replace("[재료]", "")
-    recipe_ingredients = recipe_ingredients.replace("[양념]", "|")
+    recipe_ingredients = re.sub(r"\[.*?\]", "|", recipe_ingredients)
+    recipe_ingredients = recipe_ingredients.replace(" ", "")
     ingredients_list = recipe_ingredients.split("|")
 
-    cleaned_ingredients = []
-    for ingredient in ingredients_list:
-        parts = ingredient.strip().split(" ")
-        ingredient_name = " ".join(parts[:-1])
-        cleaned_ingredient = re.sub(r"\[.*?\]", "", ingredient_name).strip()
-        if cleaned_ingredient:
-            cleaned_ingredients.append(cleaned_ingredient)
+    cleaned_ingredients = [
+        ingredient_text_preprocessing(item)
+        for item in ingredients_list
+        if ingredient_text_preprocessing(item)
+    ]
 
     return cleaned_ingredients
 
