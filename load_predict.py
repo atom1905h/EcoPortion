@@ -16,4 +16,4 @@ def predict_test_data(models, test_data):
     for model in models:
         prediction = model.predict(test_data)
         predictions.append(prediction)
-    return np.mean(predictions)
+    return np.mean(predictions, axis=0)
