@@ -55,6 +55,16 @@ def preprocessing(df, recipe):
     return df
 
 
+def recipe_preprocessing(recipe):
+    recipe = recipe.dropna(subset=["CKG_NM", "CKG_MTRL_CN", "CKG_INBUN_NM"])
+    recipe = recipe.drop_duplicates(subset=["CKG_NM"])
+    recipe["CKG_MTRL_CN"] = recipe["CKG_MTRL_CN"].apply(remove_quantity_and_unit)
+    recipe = remove_empty_lists(recipe)
+    recipe["CKG_MTRL_CN"] = recipe["CKG_MTRL_CN"].apply(lambda x: " ".join(x))
+
+    return recipe
+
+
 def apply_w2v(sentences, model, num_features):
     def _average_word_vectors(words, model, vocabulary, num_features):
         feature_vector = np.zeros((num_features,), dtype="float64")
@@ -179,4 +189,14 @@ def data_embedding(train, recipe, member, food):
     train[label_columns] = daset.iloc[: len(train)][label_columns]
     test[label_columns] = daset.iloc[len(train) :][label_columns]
 
-    return train
+    return test
+
+
+def extract_servings_ingredients(recipe, menu):
+    recipe = recipe.dropna(subset=["CKG_NM", "CKG_MTRL_CN", "CKG_INBUN_NM"])
+    recipe = recipe.drop_duplicates(subset=["CKG_NM"])
+    menu_data = recipe[recipe["CKG_NM"] == menu]
+    servings = int(menu_data["CKG_INBUN_NM"].values[0][0])
+    ingredients = menu_data["CKG_MTRL_CN"].values[0].replace("|", "")
+
+    return servings, ingredients
