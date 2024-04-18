@@ -1,0 +1,8 @@
+members.csv
+recipe.csv
+example.ipynb
+__pycache__
+catboost_info
+meraki_image
+train.csv
+test.csv
