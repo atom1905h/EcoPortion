@@ -132,7 +132,7 @@ def predict(member):
             test_predictions = np.round(np.sum(test_predictions), 1)
 
             servings, ingredients = extract_servings_ingredients(recipe, menu)
-            question_1 = f"{servings}인분 재료가 {ingredients} 일 때 {test_predictions}인분의 재료의 양은? 각 재료의 양에 {servings}을 나누고 {test_predictions}을 곱해줘. 조리과정은 다음 질문을 보고 나타내줘."
+            question_1 = f"{servings}인분 재료가 {ingredients} 일 때 {test_predictions}인분의 재료의 양은? 각 재료의 양에 {servings}을 나누고 {test_predictions}을 곱해줘. 조리과정은 이 질문에서 보여주지 마."
             formatted_sentences = recipe_crawling(pro_recipe, menu)
             question_2 = f"{servings}인분일 때 조리 순서는 {formatted_sentences}인데 {test_predictions}인분에 맞춰서 기존 조리 순서에서 재료의 양만 바꿔줘. 답변시작은 [조리 순서]로 해줘"
             chatbot = Chatbot()
@@ -157,8 +157,10 @@ def predict(member):
                     disabled=False,
                     use_container_width=None,
                 )
+        else:
             st.warning("현재 이 레시피는 준비되어 있지 않습니다.")
-
+    else:
+        st.warning("음식을 입력해주세요.")
 
 def main():
     option = st.sidebar.selectbox("Menu", ("홈", "회원 등록", "서비스"))
